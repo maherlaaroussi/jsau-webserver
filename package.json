@@ -1,0 +1,35 @@
+{
+  "name": "jsau-apiserver",
+  "version": "1.0.0",
+  "description": "ApiServer",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/maherlaaroussi/jsau-apiserver.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "init": "npm run clean && npm ci",
+    "start": "node src/index.js",
+    "start:watch": "nodemon src/",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "script/test.sh",
+    "clean": "rm -rf data/ && mkdir data"
+  },
+  "author": "Maher LAAROUSSI",
+  "license": "MIT",
+  "dependencies": {
+    "express": "4.17.1",
+    "jsau-utils": "git+ssh://git@gitlab.com/maherlaaroussi/jsau-utils.git",
+    "morgan": "1.9.1",
+    "nunjucks": "3.2.0"
+  },
+  "devDependencies": {
+    "eslint": "6.6.0",
+    "eslint-config-usecases": "1.3.0",
+    "mocha": "6.2.2",
+    "nodemon": "1.19.4",
+    "should": "13.2.3",
+    "supertest": "4.0.2"
+  }
+}

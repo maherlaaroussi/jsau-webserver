@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Démo API REST</title>
+  <script src="http://code.jquery.com/jquery-1.6.4.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+  <div id="get">
+    <input id="refresh" type="button" value="Refresh">
+    <ul id="news">Nothing ...</ul>
+  </div>
+
+  <div id="post">
+    <input id="title" type="text" title="Title" >
+    <input id="body" type="text" title="Body">
+    <select name="categories" id="categories">
+      {% for category in categories %}
+      <option value="{{category}}">{{category}}</option>
+      {% endfor %}
+      <option value="Rien">Rien</option>
+    </select>
+    <input id="create" type="button" value="Create">
+    <span id="error"></span>
+  </div>
+
+  <div id="update">
+    <input id="id_news" type="number" title="ID" disabled>
+    <input id="title_update" type="text" title="Title" >
+    <input id="body_update" type="text" title="Body">
+    <input id="update_news" type="button" value="Update">
+  </div>
+
+</body>
+
+</html>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    console.log( "ready!" );
+});
+
+$("#refresh").click(function() {
+  $.ajax({
+        url: 'http://localhost:2828/news',
+        type: 'GET',
+         dataType:'json',
+        error: function (xhr, status) {
+            $("#news").text("Erreur durant le chargement des news.");
+        },
+        success: function (res) {
+          $('#news').text("News (" + res.length + ") :");
+          res.forEach(function(elem) {
+            $('#news').append('<li><b>ID</b>: ' + elem.id + '<br/><b>Title</b>:' + elem.title + '<br/><b>Category</b>: ' + elem.category + '<br/><b>Body</b>: ' + elem.body + '</li> <input onClick="delete_news(this.id)" id="' + elem.id +'" type="button" value="Delete"><input onClick="update_news(this.id)" id="' + elem.id +'" type="button" value="Update">');
+          });
+        }
+    });
+});
+
+$("#create").click(function() {
+  $.ajax({
+        url: 'http://localhost:2828/news',
+        type: 'POST',
+         dataType:'json',
+         data: JSON.stringify({title: $('#title').val(), body: $('#body').val(), category: $("#categories option:selected").text()}),
+        contentType: "application/json; charset=utf-8",
+        dataType   : "json",
+        error: function (xhr, status) {
+          $('#error').text("Catégorie inexistante !");
+        },
+        success: function (res) {
+          $("#refresh").click();
+        }
+    });
+});
+
+function delete_news(id)
+{
+  $.ajax({
+        url: 'http://localhost:2828/news/' + id,
+        type: 'DELETE',
+        error: function (xhr, status) {
+          alert(status);
+        },
+        success: function (res) {
+          $("#refresh").click();
+        }
+    });
+}
+
+function update_news(id)
+{
+  $.ajax({
+        url: 'http://localhost:2828/news/' + id,
+        type: 'GET',
+        error: function (xhr, status) {
+          alert(status);
+        },
+        success: function (res) {
+          $("#id_news").val(res.id);
+          $("#title_update").val(res.title);
+          $("#body_update").val(res.body);
+        }
+    });
+}
+
+$("#update_news").click(function() {
+  $.ajax({
+        url: 'http://localhost:2828/news/' + $("#id_news").val(),
+        type: 'PUT',
+         dataType:'json',
+         data: JSON.stringify({title: $('#title_update').val(), body: $('#body_update').val()}),
+         contentType: "application/json; charset=utf-8",
+         dataType   : "json",
+        error: function (xhr, status) {
+        },
+        success: function (res) {
+          $("#refresh").click()
+        }
+    })
+});
+
+</script>
