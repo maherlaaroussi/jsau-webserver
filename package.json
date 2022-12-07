@@ -19,7 +19,7 @@
   "author": "Maher LAAROUSSI",
   "license": "MIT",
   "dependencies": {
-    "express": "4.17.1",
+    "express": "4.18.2",
     "jsau-utils": "git+ssh://git@gitlab.com/maherlaaroussi/jsau-utils.git",
     "morgan": "1.9.1",
     "nunjucks": "3.2.0"
